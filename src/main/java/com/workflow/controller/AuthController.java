@@ -14,16 +14,19 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricIdentityLink;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.workflow.config.JwtResponse;
 import com.workflow.entity.AuthRequest;
 import com.workflow.entity.User;
+import com.workflow.repository.UserRepository;
 import com.workflow.util.JwtUtil;
 
 import ch.qos.logback.classic.Logger;
@@ -63,16 +66,20 @@ public class AuthController {
     @Autowired
     private HistoryService historyService;
     
-    
 
+   
     
+    @Autowired
+    private UserRepository repository;
     
     
     @GetMapping("/welcome")
-    public String welcome(@RequestBody AuthRequest authRequest) {
-        return "Welcome to workflow !!";
-        
-    }
+    
+    public User  welcome() {
+
+      //  System.out.println(repository.findByUserName("emp_rh"));
+      return repository.findByUserName("emp_rh");
+    } 
 
 
     
@@ -94,13 +101,13 @@ public class AuthController {
 	public ResponseEntity<?> addClient(@RequestBody User u)
 	{
 	return UserService.adduser(u);
-	
+	 	
 	}
     
    @PostMapping("/")
    @ResponseBody
     public User getuserFromRequest(HttpServletRequest request) {
-    
+     
     return jwtUtil.getuserFromRequest(request);
     }
    
@@ -125,25 +132,23 @@ public class AuthController {
 		
 	   //taskService.deleteTask("20005");
 	   
-	   //________________________
+	   //______________________________
 	   
 	  // Map<String, Object> variables = new HashMap<String, Object>();
-	   //variables.put("User_name", "hmed");
+	  // variables.put("User_name", "hmed");
 	  // variables.put("Role","Java" );
 	  // variables.put("Duration", "3 weeks");
-	  // runtimeService.startProcessInstanceByKey("myProcess");
-	   
+	  ProcessInstance processInstance=runtimeService.startProcessInstanceByKey("myProcess");
+	  
 	   
 	   List<Task> tasks= taskService.createTaskQuery().taskCandidateGroup("DJava").list();
 	   for (Task task : tasks) {
-		   System.out.println("task available "+ task.getId());
+		   System.out.println("task available "+ task.getId()) ;
 	   }
 
-	   System.out.println();
-	 
-	   System.out.println(taskService.createTaskQuery().taskCandidateGroup("DJava").list().get(0));
-	   System.out.println(
-	   runtimeService.getVariables(taskService.createTaskQuery().taskCandidateGroup("DJava").list().get(0).getExecutionId()));
+	  // System.out.println(taskService.createTaskQuery().taskCandidateGroup("DJava").list().get(0));
+	   //System.out.println(
+	   //runtimeService.getVariables(taskService.createTaskQuery().taskCandidateGroup("DJava").list().get(0).getExecutionId()));
 	   
        return "Process started. Number of currently running"
          + "process instances= "+ runtimeService.createProcessInstanceQuery().count();

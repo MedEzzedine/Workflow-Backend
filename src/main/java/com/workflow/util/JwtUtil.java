@@ -31,16 +31,16 @@ public class JwtUtil {
     }
     
     public User getuserFromRequest(HttpServletRequest request) {
-    //	logger.info("aaaaaaaaaaaaaaaaaaaaaaaa");
+   
     	String authorizationHeader = request.getHeader("Authorization");
         String token = null;
         String userName = null;
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
             userName = extractUsername(token);
-            
+           
+           
         }
-    //    logger.info(service.getFulluser(userName));
         return token == null ? null : service.getFulluser(userName) ;
         
         

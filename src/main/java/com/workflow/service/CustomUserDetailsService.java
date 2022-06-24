@@ -31,7 +31,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
     public User getFulluser(String username) throws UsernameNotFoundException {
         return repository.findByUserName(username);
-        
     }
     
 	public ResponseEntity<?>  adduser(User u) {

@@ -20,7 +20,6 @@ public class Role implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column( updatable = false, nullable = false)
 	private Integer id;
-	
 	@Column(updatable = true, nullable = false)
 	private String nom;
 	
