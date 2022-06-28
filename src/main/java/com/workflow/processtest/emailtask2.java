@@ -11,8 +11,9 @@ public class emailtask2 implements JavaDelegate{
 	public void execute(DelegateExecution execution) {
 
 		System.out.println("traitement2.log");	
-		System.out.println("iddemande"+execution.getVariable("iddemande"));	
-	}
+		System.out.println("iddemande         "+execution.getVariable("iddemande"));	
+		System.out.println("iddemande      "+execution.getVariable("accept"));
+}
 }
 
  

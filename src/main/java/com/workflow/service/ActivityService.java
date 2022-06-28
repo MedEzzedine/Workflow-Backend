@@ -52,7 +52,7 @@ public class ActivityService {
 		  
 		   Map<String, Object> variables = new HashMap<String, Object>();
 		 
-		   if (level==1) {
+		   if (level==0) {
 
 				  variables.put("traitement1role", to);
 				  variables.put("level",1);
@@ -92,11 +92,12 @@ public class ActivityService {
 	     
 	   }
 	  
-	  public User traitement(HttpServletRequest request,int id ,boolean AcceptOrRefus,String to,int level) {
+	  public User traitement(HttpServletRequest request,int id ,boolean AcceptOrRefus) {
 
 		  User u=jwtUtil.getuserFromRequest(request);
-		  String role=u.getRoles().stream().findFirst().get().getNom();
-		  List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup(role).list();
+		  Role  role=u.getRoles().stream().findFirst().get();
+		  
+		  List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup(role.getNom()).list();
 		  String taskid=null;
 		  for (Task task : tasks) {  
 		      if((Integer) runtimeService.getVariables(task.getExecutionId()).get("iddemande")==id) 
@@ -109,14 +110,16 @@ public class ActivityService {
 		  
 		  if (AcceptOrRefus) {
 
-			  		if (level==2) variables.put("accept", true);
+			  if (role.getNiveau()==2) {variables.put("accept", true);}else{
 			  		
 			  variables.put("traitement1", true);
-			  variables.put("traitement2role",to );
+			  variables.put("traitement2role",role.getRolesup().getNom());
+			  }
 		  }else {
 
-			  		if (level==2) variables.put("accept", false);
-			  variables.put("traitement1", false);
+			  		if (role.getNiveau()==2) variables.put("accept", false);
+			  		else{
+			  variables.put("traitement1", false);}
 		  }
 		  
 		  taskService.complete(taskid,variables);

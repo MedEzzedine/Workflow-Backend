@@ -11,13 +11,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.workflow.entity.Role;
 import com.workflow.entity.User;
+import com.workflow.repository.RoleRepo;
 import com.workflow.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private RoleRepo RoleRepo;
  
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -33,7 +37,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return repository.findByUserName(username);
     }
     
-	public ResponseEntity<?>  adduser(User u) {
+	public ResponseEntity<?>  adduser(User u,int roleid) {
+		
+		Role r =RoleRepo.findById(roleid).orElse(null);
+		u.getRoles().add(r);
 		u.setPassword(passwordEncoder().encode(u.getPassword()));
 		repository.save(u);
 		return ResponseEntity.ok("success") ;	

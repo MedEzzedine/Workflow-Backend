@@ -32,12 +32,12 @@ public class demandeController {
 	@Autowired
 	private ActivityService ActivityService;
 
-	@PostMapping("/adddemande/{level}/{to}")
+	@PostMapping("/adddemande")
  	@ResponseBody
- 	public demande adddemande(@RequestBody demande d,HttpServletRequest request,@PathVariable String to, @PathVariable int level )
+ 	public demande adddemande(@RequestBody demande d,HttpServletRequest request )
  	{
 	
-	demande demande=demandeservice.adddemande(d, request,to,level);
+	demande demande=demandeservice.adddemande(d, request);
 		
 	return demande;
 
@@ -61,13 +61,13 @@ public class demandeController {
 	}
 	
 	
-	@PostMapping("/accept_refus_demande/{level}/{id}/{AcceptOrRefus}/{to}")
+	@PostMapping("/accept_refus_demande/{id}/{AcceptOrRefus}")
 	@ResponseBody
-	public demande accept_refus_demande (@PathVariable int id ,HttpServletRequest request,@PathVariable Boolean AcceptOrRefus,@PathVariable String to,@PathVariable int level)
+	public demande accept_refus_demande (@PathVariable int id ,HttpServletRequest request,@PathVariable Boolean AcceptOrRefus)
 	{
-     return demandeservice.accept_refus_demande(request,id,AcceptOrRefus,to,level);
+		
+     return demandeservice.accept_refus_demande(request,id,AcceptOrRefus);
 	} 
-	
 	
 	
 	

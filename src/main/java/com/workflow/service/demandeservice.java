@@ -9,6 +9,7 @@ import javax.sound.midi.Soundbank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.workflow.entity.Role;
 import com.workflow.entity.User;
 import com.workflow.entity.demande;
 import com.workflow.entity.etat;
@@ -32,12 +33,13 @@ public class demandeservice  {
     @Autowired
     private UserRepository repository;
     
-   public demande adddemande(demande d,HttpServletRequest request,String to,int level) {
+   public demande adddemande(demande d,HttpServletRequest request) {
 	    User u=jwtUtil.getuserFromRequest(request);
 	    d.setOwner(u);
-	    
+
+		Role role=u.getRoles().stream().findFirst().get();
 	    demande demande = demandeRepo.save(d);
-		ActivityService.startProcess(to, demande.getId(),level );
+		ActivityService.startProcess(role.getRolesup().getNom(), demande.getId(),role.getNiveau() );
 	   	return demande ;
 	   	
 	   	
@@ -71,13 +73,14 @@ public class demandeservice  {
    
    
    
-   public demande accept_refus_demande (HttpServletRequest request,int id,boolean AcceptOrRefus,String to,int level)
+   public demande accept_refus_demande (HttpServletRequest request,int id,boolean AcceptOrRefus)
 	{
 	   demande demande=getdemandebyid(id);
-	 User u = ActivityService.traitement(request, id,AcceptOrRefus,to,level);
-
+	 
+	 User u = ActivityService.traitement(request, id,AcceptOrRefus);
+	 Role  role=u.getRoles().stream().findFirst().get();
 		 if (AcceptOrRefus) {
-			if (level==2) {
+			if (role.getNiveau()==2) {
 				demande.setTraitement2(new traitement(etat.accepted,u.getUserName()));}
 			else 
 			{
@@ -85,7 +88,7 @@ public class demandeservice  {
 			demande.setTraitement2(new traitement(etat.encours));
 			}
 		 	}else {
-			if (level==1)
+			if (role.getNiveau()==1)
 			{
 				demande.setTraitement1(new traitement(etat.refused,u.getUserName()));
 			}else 

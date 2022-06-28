@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.workflow.config.JwtResponse;
 import com.workflow.entity.AuthRequest;
+import com.workflow.entity.Role;
 import com.workflow.entity.User;
 import com.workflow.repository.UserRepository;
 import com.workflow.util.JwtUtil;
@@ -51,35 +52,8 @@ public class AuthController {
     @Autowired
     private CustomUserDetailsService UserService;
     
-    
     @Autowired
-    private ManagementService managementService;
-
-
-    @Autowired
-    private RuntimeService runtimeService;
-    
-
-    @Autowired
-    private TaskService taskService;
-
-    @Autowired
-    private HistoryService historyService;
-    
-
-   
-    
-    @Autowired
-    private UserRepository repository;
-    
-    
-    @GetMapping("/welcome")
-    
-    public User  welcome() {
-
-      //  System.out.println(repository.findByUserName("emp_rh"));
-      return repository.findByUserName("emp_rh");
-    } 
+    private RoleService roleService;
 
 
     
@@ -96,11 +70,11 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt,UserService.getFulluser(authRequest.getUserName())));
     }
     
-    @PostMapping("/register")
+    @PostMapping("/register/{roleid}")
 	@ResponseBody
-	public ResponseEntity<?> addClient(@RequestBody User u)
+	public ResponseEntity<?> addClient(@RequestBody User u,@PathVariable int roleid)
 	{
-	return UserService.adduser(u);
+	return UserService.adduser(u,roleid);
 	 	
 	}
     
@@ -111,49 +85,10 @@ public class AuthController {
     return jwtUtil.getuserFromRequest(request);
     }
    
-   @GetMapping("/start-process")
-   public String startProcess() {
-     
-       //runtimeService.startProcessInstanceByKey("myProcess");
-      // runtimeService.startProcessInstanceByKey("my_Process" );
-	   //System.out.println(taskService.createTaskQuery().taskCandidateGroup("userone").list()); 
-	   //System.out.println(taskService.createTaskQuery().taskCandidateGroup("userone").singleResult().getName());
-	
-	   //taskService.complete("2505");
-	 // System.out.println(taskService.getTaskEvents("2505"));
-	   //ManagementService m =managementService.getTableName(getClass());
-	  // System.out.println(managementService.getTableName(Task.class));
-	  
-	   //for(HistoricIdentityLink h: historyService.getHistoricIdentityLinksForTask("2505") ) {
-	//	   System.out.println(h.getGroupId());
-	 //  };
-	   
-	   //runtimeService.deleteProcessInstance("20001", null);
-		
-	   //taskService.deleteTask("20005");
-	   
-	   //______________________________
-	   
-	  // Map<String, Object> variables = new HashMap<String, Object>();
-	  // variables.put("User_name", "hmed");
-	  // variables.put("Role","Java" );
-	  // variables.put("Duration", "3 weeks");
-	  ProcessInstance processInstance=runtimeService.startProcessInstanceByKey("myProcess");
-	  
-	   
-	   List<Task> tasks= taskService.createTaskQuery().taskCandidateGroup("DJava").list();
-	   for (Task task : tasks) {
-		   System.out.println("task available "+ task.getId()) ;
-	   }
-
-	  // System.out.println(taskService.createTaskQuery().taskCandidateGroup("DJava").list().get(0));
-	   //System.out.println(
-	   //runtimeService.getVariables(taskService.createTaskQuery().taskCandidateGroup("DJava").list().get(0).getExecutionId()));
-	   
-       return "Process started. Number of currently running"
-         + "process instances= "+ runtimeService.createProcessInstanceQuery().count();
-       
+   
+   @PostMapping("/addrole/{rolesupid}")
+   @ResponseBody
+   public Role addrole(@RequestBody Role r,@PathVariable int rolesupid) {
+	   return roleService.addrole(r,rolesupid);
    }
-   
-   
 }
