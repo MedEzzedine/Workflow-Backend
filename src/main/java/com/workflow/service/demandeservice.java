@@ -101,6 +101,12 @@ public class demandeservice  {
 		return demande;
 	}
    
-   
+   public List<demande> getAlldemandebyUser (HttpServletRequest request)
+	{
+	 User u =jwtUtil.getuserFromRequest(request);
+	return demandeRepo.getAlldemandebyUser(u.getId());
+	   
+	   
+	}
 
 }

@@ -78,7 +78,7 @@ public class AuthController {
 	 	
 	}
     
-   @PostMapping("/")
+   @GetMapping("/getuser")
    @ResponseBody
     public User getuserFromRequest(HttpServletRequest request) {
      

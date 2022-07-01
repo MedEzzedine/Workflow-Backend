@@ -69,9 +69,12 @@ public class demandeController {
      return demandeservice.accept_refus_demande(request,id,AcceptOrRefus);
 	} 
 	
-	
-	
-	
+	@GetMapping("/getAlldemandebyUser")
+	@ResponseBody
+	 public List<demande> getAlldemandebyUser (HttpServletRequest request)
+		{
+	return demandeservice.getAlldemandebyUser(request);
+		}
 	
 	
 	
