@@ -27,6 +27,7 @@ import com.workflow.config.JwtResponse;
 import com.workflow.entity.AuthRequest;
 import com.workflow.entity.Role;
 import com.workflow.entity.User;
+import com.workflow.entity.demande;
 import com.workflow.repository.UserRepository;
 import com.workflow.util.JwtUtil;
 
@@ -61,22 +62,16 @@ public class AuthController {
     public ResponseEntity<?> generateToken(@RequestBody AuthRequest authRequest) throws Exception {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
             );
         } catch (Exception ex) {
             throw new Exception("invalid username/password");
         }
-        String jwt=jwtUtil.generateToken(authRequest.getUserName());
-        return ResponseEntity.ok(new JwtResponse(jwt,UserService.getFulluser(authRequest.getUserName())));
+        String jwt=jwtUtil.generateToken(authRequest.getEmail());
+        return ResponseEntity.ok(new JwtResponse(jwt,UserService.getFulluser(authRequest.getEmail())));
     }
     
-    @PostMapping("/register/{roleid}")
-	@ResponseBody
-	public ResponseEntity<?> addClient(@RequestBody User u,@PathVariable int roleid)
-	{
-	return UserService.adduser(u,roleid);
-	 	
-	}
+    
     
    @GetMapping("/getuser")
    @ResponseBody
@@ -84,11 +79,10 @@ public class AuthController {
      
     return jwtUtil.getuserFromRequest(request);
     }
-   
-   
-   @PostMapping("/addrole/{rolesupid}")
-   @ResponseBody
-   public Role addrole(@RequestBody Role r,@PathVariable int rolesupid) {
-	   return roleService.addrole(r,rolesupid);
-   }
-}
+   @PostMapping("/tritux")
+	@ResponseBody
+	public User trituxaccount(@RequestBody User u)
+	{
+	return UserService.trituxaccount(u); 
+	}
+    }

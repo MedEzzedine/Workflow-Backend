@@ -34,14 +34,14 @@ public class JwtUtil {
    
     	String authorizationHeader = request.getHeader("Authorization");
         String token = null;
-        String userName = null;
+        String email = null;
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
-            userName = extractUsername(token);
+            email = extractUsername(token);
            
            
         }
-        return token == null ? null : service.getFulluser(userName) ;
+        return token == null ? null : service.getFulluser(email) ;
         
         
    }

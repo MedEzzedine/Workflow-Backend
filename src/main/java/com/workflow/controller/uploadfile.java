@@ -1,5 +1,6 @@
 package com.workflow.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,6 +11,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.workflow.entity.demande;
+import com.workflow.entity.etat;
+import com.workflow.service.demandeservice;
+
+import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,15 +39,25 @@ import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 @RequestMapping("/file")
 public class uploadfile {
 
+	@Autowired
+	private demandeservice demandeservice;
     // define a location
     public static final String DIRECTORY = System.getProperty("user.home") + "\\Documents\\angular_Springboot\\workflow\\back\\src\\main\\resources\\uploads";
 
     // Define a method to upload files
     @PostMapping("/upload")
-    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files")List<MultipartFile> multipartFiles) throws IOException {
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files")List<MultipartFile> multipartFiles,@RequestParam ("iddemande") String id) throws IOException {
+    	System.out.println(id);
+    	int i=Integer.parseInt(id);  
+    	demande d=demandeservice.getdemandebyid(i);
+    	d.setDecision(etat.accepted);
+    	d.setPdf(true);
+    	demandeservice.savedeDemande(d);
+    	
         List<String> filenames = new ArrayList<>();
         for(MultipartFile file : multipartFiles) {
-            String filename = StringUtils.cleanPath(file.getOriginalFilename());
+            //String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        	String filename=id+".pdf";
             Path fileStorage = get(DIRECTORY, filename).toAbsolutePath().normalize();
             copy(file.getInputStream(), fileStorage, REPLACE_EXISTING);
             filenames.add(filename);
@@ -59,7 +75,8 @@ public class uploadfile {
         Resource resource = new UrlResource(filePath.toUri());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("File-Name", filename);
-        httpHeaders.add(CONTENT_DISPOSITION, "attachment;File-Name=" + resource.getFilename());
+        //httpHeaders.add(CONTENT_DISPOSITION, "attachment;File-Name=" + resource.getFilename());
+        httpHeaders.add(CONTENT_DISPOSITION, "inline;File-Name=" + resource.getFilename());
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(Files.probeContentType(filePath)))
                 .headers(httpHeaders).body(resource);
     }

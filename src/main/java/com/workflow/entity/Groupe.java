@@ -1,60 +1,44 @@
 package com.workflow.entity;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 @Entity
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class traitement implements Serializable {
-	
+@Getter
+@Setter
+public class Groupe {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column( updatable = false, nullable = false)
 	private Integer id;
-	@Enumerated(EnumType.STRING)
-	private etat etats;
-	private String by;
+	@Column(updatable = true, nullable = false)
 	
-	
-	@JsonIgnore 
-	@OneToMany(mappedBy ="traitement1" ,cascade = CascadeType.ALL )
-	private List<demande> Listdemande1 ;
-	@JsonIgnore
-	@OneToMany(mappedBy ="traitement2" ,cascade = CascadeType.ALL )
-	private List<demande> Listdemande2 ;
-	
-	public traitement(etat etats, String by) {
+	private String nom;
+	public Groupe(String nom) {
 		super();
-		this.etats = etats;
-		this.by = by;
-	}
-
-	public traitement(etat etats) {
-		super();
-		this.etats = etats;
+		this.nom = nom;
 	}
 	
 	
+	//@OneToMany(mappedBy ="groupe" ,cascade = CascadeType.ALL )
+	//private List<Role> roles ;
 }

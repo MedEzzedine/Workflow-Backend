@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,11 +26,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 public class demande implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,21 +41,27 @@ public class demande implements Serializable{
     @Temporal(TemporalType.DATE)
 	@JsonFormat(pattern="yyyy-MM-dd")
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date DateDebut;
-    private String DateDebutPlusDetaile;
+    private Date dateDebut;
     @Temporal(TemporalType.DATE)
 	@JsonFormat(pattern="yyyy-MM-dd")
 	@DateTimeFormat(pattern="yyyy-MM-dd")
     private Date dateFin;
-    private String dateFinPlusDetaile;
-    private String TypeConge;
-    private int Duree;
-    private String Justification;
+    private String typeConge;
+    private int duree;
+    private String justification;
+    @Enumerated(EnumType.STRING)
+    private etat decision;
+    @Temporal(TemporalType.DATE)
+	@JsonFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+
+    private Date date;
+    private boolean pdf;
  
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     private traitement traitement1;
 
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.ALL)
     private traitement traitement2;
 	
 	
