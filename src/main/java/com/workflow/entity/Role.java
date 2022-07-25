@@ -42,9 +42,6 @@ public class Role implements Serializable {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Groupe groupe ;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
-	private Role rolesup;
-	
 	private int niveau;
 	
 	public Role(String nom) {
