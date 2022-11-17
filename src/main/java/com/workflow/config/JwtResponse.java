@@ -13,20 +13,20 @@ public class JwtResponse {
     }
 
     public JwtResponse(String token, User user) {
-		super();
-		this.token = token;
-		this.user = user;
-	}
+        super();
+        this.token = token;
+        this.user = user;
+    }
 
-	public User getuser() {
-		return user;
-	}
+    public User getuser() {
+        return user;
+    }
 
-	public void setClient(User user) {
-		this.user = user;
-	}
+    public void setClient(User user) {
+        this.user = user;
+    }
 
-	public String getToken() {
+    public String getToken() {
         return token;
     }
 

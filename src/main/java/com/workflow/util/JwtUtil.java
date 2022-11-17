@@ -1,6 +1,8 @@
 package com.workflow.util;
 
 
+import com.workflow.entity.User;
+import com.workflow.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,15 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.workflow.entity.User;
-import com.workflow.service.CustomUserDetailsService;
-
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class JwtUtil {
@@ -29,22 +27,22 @@ public class JwtUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-    
+
     public User getuserFromRequest(HttpServletRequest request) {
-   
-    	String authorizationHeader = request.getHeader("Authorization");
+
+        String authorizationHeader = request.getHeader("Authorization");
         String token = null;
         String email = null;
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
             email = extractUsername(token);
-           
-           
+
+
         }
-        return token == null ? null : service.getFulluser(email) ;
-        
-        
-   }
+        return token == null ? null : service.getFulluser(email);
+
+
+    }
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -54,6 +52,7 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
